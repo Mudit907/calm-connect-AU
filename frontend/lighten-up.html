@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something to lighten the mood — CalmConnect</title>
+<meta name="description" content="Stand-up clips and comics for when you need a lighter moment.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .laugh-hero {
+    padding: var(--space-xl) 0;
+    text-align: center;
+  }
+
+  .laugh-hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+  }
+
+  .laugh-hero span.accent {
+    color: var(--terracotta);
+  }
+
+  /* --- Asymmetric video layout: one featured, three smaller --- */
+  .video-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .video-layout .featured iframe {
+    height: 320px;
+  }
+
+  .video-layout .rest {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .video-layout .rest iframe {
+    height: 152px;
+  }
+
+  @media (max-width: 760px) {
+    .video-layout {
+      grid-template-columns: 1fr;
+    }
+    .video-layout .featured iframe {
+      height: 220px;
+    }
+  }
+
+  .video-layout iframe {
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: none;
+  }
+
+  /* --- Loosely scattered comic cards: alternating tilt, not a rigid grid --- */
+  .comics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+  }
+
+  .comic-card {
+    text-align: center;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+
+  .comic-card:nth-child(odd) {
+    transform: rotate(-1.4deg);
+  }
+
+  .comic-card:nth-child(even) {
+    transform: rotate(1.2deg);
+  }
+
+  .comic-card:hover {
+    transform: rotate(0deg) translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 28px rgba(43, 63, 60, 0.14);
+  }
+
+  .comic-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .comic-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: var(--space-sm);
+  }
+</style>
+</head>
+<body data-page="lighten-up">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="laugh-hero">
+  <div class="container">
+    <span class="eyebrow">Need a laugh</span>
+    <h1>Something to <span class="accent">lighten the mood</span></h1>
+    <p style="max-width: 520px; margin: var(--space-sm) auto 0; color: var(--mid-eucalyptus);">A few stand-up clips and comics — sometimes a small distraction is exactly what helps.</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <h2 style="text-align: center; margin-bottom: var(--space-md);">Laugh out loud — stand-up specials</h2>
+    <div class="video-layout">
+      <div class="featured">
+        <iframe src="https://www.youtube.com/embed/t8HrZTLRCeU" title="Stand-up special 1" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="rest">
+        <iframe src="https://www.youtube.com/embed/NVg3bRE8q8U" title="Stand-up special 2" allowfullscreen loading="lazy"></iframe>
+        <iframe src="https://www.youtube.com/embed/Znua7tNAbik" title="Stand-up special 3" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+    <div class="video-layout" style="margin-top: var(--space-sm);">
+      <iframe src="https://www.youtube.com/embed/UIyQvUe08Zc" title="Stand-up special 4" allowfullscreen loading="lazy" style="height: 200px;"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tinted">
+  <div class="container">
+    <h2 style="text-align: center; margin-bottom: var(--space-md);">Funny comics for you</h2>
+    <div class="comics-grid">
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/51Ubv8zqERS._SY445_SX342_.jpg" alt="Chacha Chaudhary Mr. X cover">
+        <h3>Chacha Chaudhary: Mr. X</h3>
+        <a href="https://www.amazon.com.au/s?k=Chacha+Chaudhary+Mr+X" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/51UnJkkoXgL._SX342_SY445_.jpg" alt="Tom and Jerry Snowman comic cover">
+        <h3>Tom &amp; Jerry: Snowman &amp; Other Comics</h3>
+        <a href="https://www.amazon.com.au/s?k=Tom+Jerry+Snowman+Comics" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/81Wy2lZyqAL._SY342_.jpg" alt="Suppandi Fire Aware comic cover">
+        <h3>Suppandi: Fire Aware</h3>
+        <a href="https://www.amazon.com.au/s?k=Suppandi+Fire+Aware" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/51Wo96djffL._SX342_SY445_.jpg" alt="Adulthood is a Myth comic cover">
+        <h3>Adulthood is a Myth</h3>
+        <a href="https://www.amazon.com.au/s?k=Adulthood+is+a+Myth+Sarah+Andersen" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/81kO1Md2V6L._SY385_.jpg" alt="Zen and the Art of Sarcasm cover">
+        <h3>Zen and the Art of Sarcasm</h3>
+        <a href="https://www.amazon.com.au/s?k=Zen+and+the+Art+of+Sarcasm" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+      <div class="cc-card comic-card">
+        <img src="https://m.media-amazon.com/images/I/71tVvU10bzL._SY466_.jpg" alt="Tenali Raman Illustrated Stories cover">
+        <h3>Tenali Raman: Illustrated Stories</h3>
+        <a href="https://www.amazon.com.au/s?k=Tenali+Raman+Illustrated+Stories" target="_blank" rel="noopener" class="btn btn-accent">Read now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+</body>
+</html>

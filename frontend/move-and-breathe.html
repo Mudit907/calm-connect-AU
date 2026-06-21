@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A moment to move and breathe — CalmConnect</title>
+<meta name="description" content="Yoga asanas, a meditation timer, and guided progressive muscle relaxation.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .page-hero {
+    padding: var(--space-lg) 0 var(--space-md);
+    text-align: center;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+  }
+
+  .importance-list {
+    list-style: none;
+    max-width: 560px;
+    margin: var(--space-md) auto 0;
+    text-align: left;
+  }
+
+  .importance-list li {
+    font-size: 1.05rem;
+    margin: var(--space-xs) 0;
+    padding-left: 1.6rem;
+    position: relative;
+    color: var(--mid-eucalyptus);
+  }
+
+  .importance-list li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+
+  .asana-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+    box-shadow: 0 2px 10px rgba(27, 43, 38, 0.06);
+  }
+
+  .asana-card img {
+    width: 100%;
+    max-width: 320px;
+    object-fit: cover;
+    height: auto;
+  }
+
+  .asana-info {
+    flex: 1;
+    padding: var(--space-md);
+    min-width: 240px;
+  }
+
+  .asana-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  .asana-info p {
+    color: var(--mid-eucalyptus);
+    margin-bottom: var(--space-sm);
+  }
+
+  /* --- Meditation timer --- */
+  .timer-section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+  }
+
+  #timer {
+    padding: 0.6rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--sage);
+    font-family: var(--font-body);
+  }
+
+  #timer-display {
+    font-family: var(--font-mono);
+    font-size: 2.2rem;
+    font-weight: 500;
+  }
+
+  /* --- Shared breathing module (same component as switch-off.html) --- */
+  .breathing-module { text-align: center; }
+  .breathing-controls { display: flex; justify-content: center; gap: 0.6rem; margin-bottom: var(--space-md); flex-wrap: wrap; }
+  .breathing-controls button.is-active { background: var(--ink); color: var(--bone); }
+  .breath-circle-wrap { display: flex; justify-content: center; align-items: center; height: 280px; }
+  #breath-circle {
+    width: 140px; height: 140px; border-radius: 50%; background: var(--mid-eucalyptus);
+    display: flex; align-items: center; justify-content: center; color: var(--bone);
+    font-family: var(--font-mono); font-size: 0.95rem; text-align: center;
+    transition: width 1s ease, height 1s ease, background 1s ease;
+  }
+  #breath-circle.is-inhale { width: 220px; height: 220px; transition-duration: 4s; }
+  #breath-circle.is-hold { width: 220px; height: 220px; background: var(--terracotta); transition-duration: 0.3s; }
+  #breath-circle.is-exhale { width: 140px; height: 140px; transition-duration: 4s; }
+  .breath-count { font-family: var(--font-mono); color: var(--sage); margin-top: var(--space-sm); }
+
+  /* --- Progressive muscle relaxation --- */
+  .pmr-step {
+    display: none;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .pmr-step.is-active {
+    display: block;
+  }
+
+  .pmr-step h3 {
+    font-size: 1.4rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .pmr-progress {
+    font-family: var(--font-mono);
+    color: var(--sage);
+    margin-bottom: var(--space-md);
+  }
+
+  .pmr-timer-ring {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--sage-tint);
+    border-top-color: var(--terracotta);
+    margin: 0 auto var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+  }
+
+  .pmr-complete {
+    display: none;
+    text-align: center;
+  }
+
+  .pmr-complete.is-active {
+    display: block;
+  }
+
+  /* --- Page sub-nav (this page has 4 distinct tools, worth wayfinding) --- */
+  .page-subnav {
+    position: sticky;
+    top: 60px; /* approximate main-nav height; verify visually and adjust if needed */
+    z-index: 90;
+    background: rgba(246, 243, 236, 0.95);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--sage-tint);
+  }
+
+  .page-subnav__inner {
+    display: flex;
+    gap: var(--space-md);
+    overflow-x: auto;
+    padding: 0.6rem var(--space-md);
+  }
+
+  .page-subnav a {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--sage);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 0.2rem 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .page-subnav a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--terracotta);
+  }
+</style>
+</head>
+<body data-page="move-and-breathe">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Need to move, need to breathe</span>
+    <h1>A moment to move and breathe</h1>
+    <ul class="importance-list">
+      <li>Enhances flexibility and posture</li>
+      <li>Reduces stress and anxiety naturally</li>
+      <li>Improves breathing and energy levels</li>
+      <li>Boosts concentration and mindfulness</li>
+      <li>Promotes overall physical and mental wellbeing</li>
+    </ul>
+  </div>
+</header>
+
+<nav class="page-subnav" aria-label="Page sections">
+  <div class="container page-subnav__inner">
+    <a href="#asanas">Asanas</a>
+    <a href="#meditation">Meditation timer</a>
+    <a href="#breathing">Breathing</a>
+    <a href="#pmr">Muscle relaxation</a>
+  </div>
+</nav>
+
+<section class="section" id="asanas">
+  <div class="container">
+    <span class="eyebrow">Practice</span>
+    <h2 style="margin-bottom: var(--space-md);">Seven yoga asanas</h2>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-1070647,msid-114823789,width-600,height-335,resizemode-75/114823789.jpg" alt="Tadasana - Mountain Pose">
+      <div class="asana-info">
+        <h3>Tadasana (Mountain Pose)</h3>
+        <p>Stand tall with your feet together, arms by your sides, palms facing forward. Lengthen your spine, engage your core, and lift your chest. A grounding pose that improves posture and circulation.</p>
+        <a href="https://www.youtube.com/watch?v=9eNMoDT2I-k" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-823325,msid-114823791,width-600,height-335,resizemode-75/114823791.jpg" alt="Sarvangasana">
+      <div class="asana-info">
+        <h3>Sarvangasana (Shoulder Stand)</h3>
+        <p>Lie on your back and lift your legs and lower body off the ground, supporting your lower back with your hands. Keep your legs straight and toes pointed upward.</p>
+        <a href="https://www.youtube.com/watch?v=g3wvIPXZ-Qo" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-759259,msid-114823795,width-600,height-335,resizemode-75/114823795.jpg" alt="Halasana">
+      <div class="asana-info">
+        <h3>Halasana (Plow Pose)</h3>
+        <p>From shoulder stand, lower your legs over your head until your feet touch the ground behind you. Keep your hands on your lower back for support.</p>
+        <a href="https://www.youtube.com/watch?v=zOZumZ_lD1c" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-826053,msid-114823797,width-600,height-335,resizemode-75/114823797.jpg" alt="Bhujangasana">
+      <div class="asana-info">
+        <h3>Bhujangasana (Cobra Pose)</h3>
+        <p>Lie on your stomach with palms flat on the ground under your shoulders. Inhale as you lift your chest off the ground, keeping elbows close to your body.</p>
+        <a href="https://www.youtube.com/watch?v=fOdrW7nf9gw" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-977372,msid-114823798,width-600,height-335,resizemode-75/114823798.jpg" alt="Matsyasana">
+      <div class="asana-info">
+        <h3>Matsyasana (Fish Pose)</h3>
+        <p>Lie on your back with legs extended. Press your forearms and elbows into the ground as you lift your chest toward the ceiling, opening the chest for deeper breathing.</p>
+        <a href="https://www.youtube.com/watch?v=MEgYDfwMV_w" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-946064,msid-114823802,width-600,height-335,resizemode-75/114823802.jpg" alt="Paschimottanasana">
+      <div class="asana-info">
+        <h3>Paschimottanasana (Seated Forward Bend)</h3>
+        <p>Sit with legs extended in front of you. Hinge at the hips and reach forward toward your feet or shins. A calming pose that helps quiet the mind.</p>
+        <a href="https://www.youtube.com/watch?v=T8sgVyF4Ux4" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+
+    <div class="asana-card">
+      <img src="https://static.toiimg.com/thumb/imgsize-1773383,msid-114823803,width-600,height-335,resizemode-75/114823803.jpg" alt="Viparita Karani">
+      <div class="asana-info">
+        <h3>Viparita Karani (Legs-Up-The-Wall Pose)</h3>
+        <p>Sit close to a wall and lie on your back, extending your legs upward along the wall. Relax your arms by your sides and close your eyes for a restorative pause.</p>
+        <a href="https://www.youtube.com/watch?v=xmcDj4Bf--0" target="_blank" rel="noopener" class="btn btn-ghost">Watch video</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tinted" id="meditation">
+  <div class="container" style="text-align: center;">
+    <span class="eyebrow">Meditation</span>
+    <h2 style="margin-bottom: var(--space-md);">Sit with a timer</h2>
+    <div class="timer-section">
+      <label for="timer">Set timer</label>
+      <select id="timer">
+        <option value="60">1 minute</option>
+        <option value="180">3 minutes</option>
+        <option value="600">10 minutes</option>
+        <option value="1200">20 minutes</option>
+      </select>
+      <button id="start-timer" class="btn btn-accent">Start timer</button>
+    </div>
+    <p id="timer-display">00:00</p>
+  </div>
+</section>
+
+<section class="section" id="breathing">
+  <div class="container breathing-module">
+    <span class="eyebrow">Guided breathing</span>
+    <h2 style="margin-bottom: var(--space-sm);">Pick a pattern</h2>
+    <div class="breathing-controls">
+      <button class="btn btn-ghost is-active" data-pattern="box">Box breathing (4-4-4-4)</button>
+      <button class="btn btn-ghost" data-pattern="478">4-7-8 breathing</button>
+    </div>
+    <div class="breath-circle-wrap">
+      <div id="breath-circle"><span id="breath-label">Press start</span></div>
+    </div>
+    <p class="breath-count" id="breath-count"></p>
+    <button class="btn btn-primary" id="breath-toggle" style="margin-top: var(--space-md);">Start</button>
+  </div>
+</section>
+
+<section class="section section--tinted" id="pmr">
+  <div class="container" style="text-align: center;">
+    <span class="eyebrow">Progressive muscle relaxation</span>
+    <h2 style="margin-bottom: var(--space-sm);">Tense, then let go</h2>
+    <p style="color: var(--mid-eucalyptus); max-width: 480px; margin: 0 auto var(--space-md);">
+      A guided pass through major muscle groups — tense each one for a few seconds, then release. Works well lying down.
+    </p>
+
+    <div id="pmr-intro">
+      <button class="btn btn-primary" id="pmr-start">Begin</button>
+    </div>
+
+    <div id="pmr-steps"></div>
+
+    <div class="pmr-complete" id="pmr-complete">
+      <p style="color: var(--mid-eucalyptus);">That's the full pass. Notice how your body feels now compared to when you started.</p>
+      <button class="btn btn-ghost" id="pmr-restart" style="margin-top: var(--space-sm);">Do it again</button>
+    </div>
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+<script src="assets/breathing.js"></script>
+<script src="assets/move-and-breathe.js"></script>
+</body>
+</html>

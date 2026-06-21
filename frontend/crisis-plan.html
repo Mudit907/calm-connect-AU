@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your coping plan — CalmConnect</title>
+<meta name="description" content="A personal safety and coping plan you can fill in now, based on the Stanley-Brown Safety Planning Intervention.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .page-hero {
+    padding: var(--space-lg) 0 var(--space-md);
+    text-align: center;
+  }
+
+  .page-hero p {
+    max-width: 600px;
+    margin: var(--space-sm) auto 0;
+    color: var(--mid-eucalyptus);
+  }
+
+  .attribution-note {
+    display: block;
+    max-width: 600px;
+    margin: var(--space-sm) auto 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--sage);
+  }
+
+  .plan-tool {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .plan-step {
+    margin-bottom: var(--space-md);
+  }
+
+  .plan-step h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .plan-step .hint {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--sage);
+    margin-bottom: 0.5rem;
+  }
+
+  .plan-step textarea {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.75rem;
+    border: 1.5px solid var(--sage-tint);
+    border-radius: var(--radius-sm);
+    background: var(--bone);
+    color: var(--ink);
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .plan-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--mid-eucalyptus);
+    color: var(--bone);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+  }
+
+  .means-note {
+    background: var(--sage-tint);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+    color: var(--mid-eucalyptus);
+  }
+
+  .plan-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .plan-status {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--sage);
+  }
+
+  .always-available {
+    text-align: center;
+  }
+
+  .always-available .cc-card {
+    text-align: left;
+  }
+</style>
+</head>
+<body data-page="crisis-plan">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Always here, not just when things are heavy</span>
+    <h1>Your coping plan</h1>
+    <p>A short, structured plan you can fill in now — while things feel manageable — so it's ready if a harder moment comes. Based on a real, widely-used clinical framework, not something improvised for this site.</p>
+    <span class="attribution-note">Adapted from the Stanley-Brown Safety Planning Intervention (Stanley &amp; Brown, 2012), the template used by the US 988 Suicide &amp; Crisis Lifeline and many hospital and community mental health services. <a href="https://988lifeline.org/wp-content/uploads/2017/09/Brown_StanleySafetyPlanTemplate1.pdf" target="_blank" rel="noopener">View the original template</a>.</span>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container plan-tool">
+    <form id="plan-form">
+      <div class="plan-step cc-card">
+        <h3><span class="plan-step-number">1</span>Warning signs</h3>
+        <span class="hint">Thoughts, feelings, or situations that tell you a harder moment might be building.</span>
+        <textarea id="plan-warning-signs" placeholder="e.g. Withdrawing from messages, not sleeping properly, feeling numb"></textarea>
+      </div>
+
+      <div class="plan-step cc-card">
+        <h3><span class="plan-step-number">2</span>Things I can do on my own</h3>
+        <span class="hint">Coping strategies that don't need anyone else — a walk, music, breathing, anything that's worked before.</span>
+        <textarea id="plan-internal-coping" placeholder="e.g. Put on a specific playlist, go for a walk, use the breathing tool on this site"></textarea>
+      </div>
+
+      <div class="plan-step cc-card">
+        <h3><span class="plan-step-number">3</span>People and places that help, just by being around them</h3>
+        <span class="hint">Not necessarily to talk about what's going on — just somewhere or someone that helps you feel less alone.</span>
+        <textarea id="plan-social-distraction" placeholder="e.g. Call my sister, go sit at the local café, visit a friend"></textarea>
+      </div>
+
+      <div class="plan-step cc-card">
+        <h3><span class="plan-step-number">4</span>People I can ask for help directly</h3>
+        <span class="hint">People you'd actually tell if things got hard — name and how to reach them.</span>
+        <textarea id="plan-ask-help" placeholder="e.g. Mum — [phone number], my GP — [clinic number]"></textarea>
+      </div>
+
+      <div class="plan-step cc-card">
+        <h3><span class="plan-step-number">5</span>Professionals and services</h3>
+        <span class="hint">Your GP, a psychologist, or a crisis line — see the always-available list below for Australian services.</span>
+        <textarea id="plan-professionals" placeholder="e.g. My GP — [clinic], my psychologist — [name and number]"></textarea>
+      </div>
+
+      <div class="plan-step">
+        <h3 style="font-size: 1rem;">Making the environment safer</h3>
+        <p class="means-note">The original framework's final step is reducing access to anything you might use to harm yourself during a crisis — for example, asking someone you trust to hold onto medication or other means temporarily. This is genuinely one of the most effective parts of a safety plan, and it's worth doing with a person, not a form — a GP, counsellor, or crisis line (below) can talk through this with you properly.</p>
+      </div>
+
+      <div class="plan-actions">
+        <button type="submit" class="btn btn-primary">Save to this browser</button>
+        <button type="button" class="btn btn-ghost" id="plan-print">Print or save as PDF</button>
+        <span class="plan-status" id="plan-status"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section section--tinted always-available">
+  <div class="container">
+    <span class="eyebrow">Always available</span>
+    <h2 style="margin-bottom: var(--space-md);">Australian support, day or night</h2>
+    <div class="reading-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-sm); max-width: 720px; margin: 0 auto;">
+      <div class="cc-card">
+        <h3 style="font-size: 1.1rem;">Lifeline</h3>
+        <p style="color: var(--mid-eucalyptus); font-size: 0.92rem;">13 11 14 · 24/7 crisis support and suicide prevention</p>
+      </div>
+      <div class="cc-card">
+        <h3 style="font-size: 1.1rem;">Beyond Blue</h3>
+        <p style="color: var(--mid-eucalyptus); font-size: 0.92rem;">1300 22 4636 · 24/7 mental health support</p>
+      </div>
+      <div class="cc-card">
+        <h3 style="font-size: 1.1rem;">Kids Helpline</h3>
+        <p style="color: var(--mid-eucalyptus); font-size: 0.92rem;">1800 55 1800 · 24/7, for under 25s</p>
+      </div>
+      <div class="cc-card">
+        <h3 style="font-size: 1.1rem;">Emergency</h3>
+        <p style="color: var(--mid-eucalyptus); font-size: 0.92rem;">000 · if there's immediate danger</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+<script src="assets/crisis-plan.js"></script>
+</body>
+</html>

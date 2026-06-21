@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalmConnect — Find the support that fits how you feel</title>
+<meta name="description" content="A calm, AU-focused companion that reads how you're feeling and points you toward what tends to help.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .hero {
+    padding: var(--space-xl) 0 var(--space-lg);
+  }
+
+  .hero__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__intro h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero__intro p {
+    color: var(--mid-eucalyptus);
+    font-size: 1.05rem;
+    max-width: 520px;
+  }
+
+  .mood-form {
+    max-width: 640px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: 0 4px 24px rgba(27, 43, 38, 0.08);
+  }
+
+  .mood-form__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .mood-form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--mid-eucalyptus);
+  }
+
+  .mood-form textarea,
+  .mood-form input {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.75rem;
+    border: 1.5px solid var(--sage-tint);
+    border-radius: var(--radius-sm);
+    background: var(--bone);
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  .mood-form textarea {
+    min-height: 110px;
+  }
+
+  .mood-form input[type="number"] {
+    max-width: 120px;
+  }
+
+  .mood-form__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+
+  .mood-line {
+    margin-top: var(--space-lg);
+    width: 100%;
+    height: 60px;
+  }
+
+  .mood-line path {
+    fill: none;
+    stroke: var(--sage);
+    stroke-width: 2;
+    transition: stroke 0.6s var(--ease);
+  }
+
+  .mood-line.is-positive path { stroke: #7FA39B; }
+  .mood-line.is-negative path { stroke: var(--terracotta); }
+
+  .result-panel {
+    margin-top: var(--space-lg);
+    max-width: 640px;
+    display: none;
+  }
+
+  .result-panel.is-visible {
+    display: block;
+  }
+
+  .result-panel__meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--sage);
+    margin-bottom: var(--space-sm);
+  }
+
+  .result-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1.1rem;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1.5px solid var(--sage-tint);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .result-item:hover {
+    border-color: var(--terracotta);
+    transform: translateX(4px);
+  }
+
+  .result-item--top {
+    border-color: var(--terracotta);
+    background: var(--sage-tint);
+  }
+
+  .result-item__rank {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--sage);
+    margin-right: 0.75rem;
+  }
+
+  .form-error {
+    color: var(--terracotta);
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  .form-error.is-visible {
+    display: block;
+  }
+
+  .au-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--sage);
+    margin-top: var(--space-md);
+  }
+</style>
+</head>
+<body data-page="index">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="hero">
+  <div class="container">
+    <div class="hero__intro">
+      <span class="eyebrow">CalmConnect &middot; Australia</span>
+      <h1>How are you doing today?</h1>
+      <p>Tell us a little about how you're feeling, and we'll match you with the kind of support that tends to help most right now — tuned for the way the seasons and pace of life here in Australia actually feel.</p>
+    </div>
+
+    <form class="mood-form" id="mood-form" novalidate>
+      <div class="mood-form__row">
+        <label for="mood-text">What's on your mind?</label>
+        <textarea id="mood-text" name="text" maxlength="1000" placeholder="e.g. Work's been full-on this week and I'm finding it hard to switch off." required></textarea>
+      </div>
+      <div class="mood-form__row" style="flex-direction: row; align-items: center; gap: 1rem;">
+        <div style="flex-direction: column; display: flex; gap: 0.4rem;">
+          <label for="mood-age">Your age</label>
+          <input type="number" id="mood-age" name="age" min="10" max="110" value="25" required>
+        </div>
+      </div>
+      <p class="form-error" id="form-error">Please share a few words about how you're feeling, and a valid age.</p>
+      <div class="mood-form__actions">
+        <button type="submit" class="btn btn-primary" id="mood-submit">Find what helps</button>
+        <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--sage);" id="mood-status"></span>
+      </div>
+
+      <svg class="mood-line" id="mood-line" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path id="mood-line-path" d="M0,30 L600,30" />
+      </svg>
+    </form>
+
+    <div class="result-panel" id="result-panel">
+      <p class="result-panel__meta" id="result-meta"></p>
+      <ul class="result-list" id="result-list"></ul>
+    </div>
+
+    <p class="au-strip" id="au-season-strip"></p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">How it works</span>
+    <h2 style="margin-bottom: var(--space-md); font-size: 1.8rem;">A model, not a guess</h2>
+    <p style="max-width: 640px; color: var(--mid-eucalyptus);">
+      What you type is read by a model trained to recognise patterns in how people describe what they're going through, combined with your age band and the current Australian season, and turned into a ranked set of recommendations. Nothing here is a diagnosis — it's a starting point for finding what might help today. If things feel like more than a tough day, the support links in the footer are there any time.
+    </p>
+  </div>
+</section>
+
+<section class="section section--tinted">
+  <div class="container" style="text-align: center;">
+    <span class="eyebrow">Already checked in before?</span>
+    <h2 style="margin-bottom: var(--space-sm); font-size: 1.6rem;">See how things have been trending</h2>
+    <p style="max-width: 480px; margin: 0 auto var(--space-md); color: var(--mid-eucalyptus);">
+      A simple view of your past check-ins, stored only in this browser.
+    </p>
+    <a href="history.html" class="btn btn-ghost">View your history</a>
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+<script src="assets/session.js"></script>
+<script src="assets/api.js"></script>
+<script>
+  const AU_SEASON_LABELS = {
+    summer: "It's summer in Australia right now",
+    autumn: "It's autumn in Australia right now",
+    winter: "It's winter in Australia right now",
+    spring: "It's spring in Australia right now",
+  };
+
+  function localAuSeason() {
+    const month = new Date().getMonth() + 1;
+    if ([12, 1, 2].includes(month)) return "summer";
+    if ([3, 4, 5].includes(month)) return "autumn";
+    if ([6, 7, 8].includes(month)) return "winter";
+    return "spring";
+  }
+
+  document.getElementById("au-season-strip").textContent =
+    AU_SEASON_LABELS[localAuSeason()] + " — recommendations are tuned accordingly.";
+
+  // Maps the trained category classifier's output to a mood-line visual
+  // state. This is a UI mapping only — it does not imply the categories
+  // are ranked by severity (see backend/ml/DESIGN.md). "Normal" reads as
+  // calm; every clinical category gets the same gentle "elevated" visual,
+  // deliberately not graded by how "bad" the category sounds.
+  const ELEVATED_CATEGORIES = new Set(["Anxiety", "Depression", "Stress", "Bipolar", "Personality disorder", "Suicidal"]);
+
+  function setMoodLine(state) {
+    const svg = document.getElementById("mood-line");
+    const path = document.getElementById("mood-line-path");
+    svg.classList.remove("is-positive", "is-negative");
+
+    if (state === "calm") {
+      svg.classList.add("is-positive");
+      path.setAttribute("d", "M0,30 Q150,10 300,30 T600,30");
+    } else if (state === "elevated-high") {
+      svg.classList.add("is-negative");
+      path.setAttribute("d", "M0,30 Q100,55 200,30 Q300,5 400,30 Q500,55 600,30");
+    } else if (state === "elevated") {
+      svg.classList.add("is-negative");
+      path.setAttribute("d", "M0,30 Q150,45 300,30 T600,30");
+    } else {
+      path.setAttribute("d", "M0,30 L600,30");
+    }
+  }
+
+  const form = document.getElementById("mood-form");
+  const errorEl = document.getElementById("form-error");
+  const statusEl = document.getElementById("mood-status");
+  const resultPanel = document.getElementById("result-panel");
+  const resultMeta = document.getElementById("result-meta");
+  const resultList = document.getElementById("result-list");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = document.getElementById("mood-text").value.trim();
+    const age = parseInt(document.getElementById("mood-age").value, 10);
+
+    if (!text || isNaN(age) || age < 10 || age > 110) {
+      errorEl.classList.add("is-visible");
+      return;
+    }
+    errorEl.classList.remove("is-visible");
+
+    statusEl.textContent = "Thinking...";
+    document.getElementById("mood-submit").disabled = true;
+
+    try {
+      const data = await getRecommendation(age, text);
+      statusEl.textContent = "";
+
+      if (data.escalation_flag) {
+        setMoodLine("elevated-high");
+      } else if (ELEVATED_CATEGORIES.has(data.category)) {
+        setMoodLine("elevated");
+      } else {
+        setMoodLine("calm");
+      }
+
+      if (data.escalation_flag) {
+        const showCrisis = window.showCrisisBanner;
+        if (typeof showCrisis === "function") showCrisis();
+      }
+
+      resultMeta.textContent = `season: ${data.season} · model confidence: ${Math.round(data.category_confidence * 100)}%`;
+      resultList.innerHTML = data.ranked
+        .map(
+          (t, i) => `
+        <li>
+          <a class="result-item ${i === 0 ? "result-item--top" : ""}" href="${t.page}">
+            <span><span class="result-item__rank">0${i + 1}</span>${t.label}</span>
+          </a>
+        </li>`
+        )
+        .join("");
+      resultPanel.classList.add("is-visible");
+    } catch (err) {
+      statusEl.textContent = "";
+      errorEl.textContent = "Couldn't reach the recommender right now — try exploring the therapies below instead.";
+      errorEl.classList.add("is-visible");
+      console.error(err);
+    } finally {
+      document.getElementById("mood-submit").disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A different way to look at it — CalmConnect</title>
+<meta name="description" content="A guided thought-reframing exercise, plus short stories and articles to shift your headspace.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .page-hero {
+    padding: var(--space-lg) 0 var(--space-md);
+    text-align: center;
+  }
+
+  .page-hero p {
+    max-width: 560px;
+    margin: var(--space-sm) auto 0;
+    color: var(--mid-eucalyptus);
+  }
+
+  .reading-subheading {
+    font-size: 1.5rem;
+    margin: var(--space-lg) 0 var(--space-sm);
+    color: var(--mid-eucalyptus);
+    border-left: 4px solid var(--terracotta);
+    padding-left: 0.75rem;
+  }
+
+  .reading-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .reading-card { cursor: pointer; }
+  .reading-card h4 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .reading-card p { color: var(--mid-eucalyptus); font-size: 0.92rem; }
+
+  .reading-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(43, 63, 60, 0.55);
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-md);
+    overflow-y: auto;
+  }
+
+  .reading-modal.is-open { display: flex; }
+
+  .modal-content {
+    background: var(--surface);
+    color: var(--ink);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    font-size: 1.4rem;
+    color: var(--terracotta);
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+
+  .modal-content h3 { font-size: 1.3rem; margin-bottom: var(--space-sm); }
+  .modal-content p { color: var(--mid-eucalyptus); line-height: 1.7; }
+  body.modal-open { overflow: hidden; }
+
+  .book-cover {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .recommended-card { text-align: center; }
+  .recommended-card h4 { margin-top: var(--space-xs); }
+  .recommended-card p { margin-bottom: var(--space-sm); }
+
+  /* --- CBT thought reframing tool --- */
+  .cbt-tool {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .cbt-field {
+    margin-bottom: var(--space-md);
+  }
+
+  .cbt-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .cbt-field .hint {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--sage);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .cbt-field textarea {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.75rem;
+    border: 1.5px solid var(--sage-tint);
+    border-radius: var(--radius-sm);
+    background: var(--bone);
+    color: var(--ink);
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .cbt-progress {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: var(--space-md);
+    justify-content: center;
+  }
+
+  .cbt-progress span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sage-tint);
+  }
+
+  .cbt-progress span.is-active {
+    background: var(--terracotta);
+  }
+
+  .cbt-progress span.is-done {
+    background: var(--mid-eucalyptus);
+  }
+
+  .cbt-step {
+    display: none;
+  }
+
+  .cbt-step.is-active {
+    display: block;
+  }
+
+  .cbt-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-md);
+  }
+
+  .cbt-summary {
+    display: none;
+  }
+
+  .cbt-summary.is-active {
+    display: block;
+  }
+
+  .cbt-summary-row {
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--sage-tint);
+  }
+
+  .cbt-summary-row strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    margin-bottom: 0.2rem;
+  }
+
+  /* --- Act break: signals a shift from the structured wizard above
+     to the looser reading content below, rather than letting both
+     sections blur into the same card-grid rhythm. --- */
+  .act-break {
+    padding: var(--space-lg) 0 0;
+  }
+
+  .act-break__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .act-break__line {
+    flex: 1;
+    height: 1px;
+    background: var(--sage-tint);
+  }
+
+  .act-break__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--sage);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body data-page="different-perspective">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Want a different perspective</span>
+    <h1>A different way to look at it</h1>
+    <p>Sometimes a thought feels like a fact. This is a short, structured way to check it — a technique called thought reframing, used widely in cognitive behavioural therapy (CBT).</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container cbt-tool">
+    <span class="eyebrow" style="text-align: center; display: block;">Thought reframing</span>
+    <h2 style="text-align: center; margin-bottom: var(--space-md);">Walk through a thought, step by step</h2>
+
+    <div class="cbt-progress" id="cbt-progress" aria-hidden="true"></div>
+
+    <form id="cbt-form" class="cc-card">
+      <div class="cbt-step is-active" data-step="0">
+        <div class="cbt-field">
+          <label for="cbt-situation">What happened?</label>
+          <span class="hint">Just the facts — what someone could have filmed, not your interpretation of it.</span>
+          <textarea id="cbt-situation" placeholder="e.g. I sent a message and they haven't replied in two days."></textarea>
+        </div>
+      </div>
+
+      <div class="cbt-step" data-step="1">
+        <div class="cbt-field">
+          <label for="cbt-thought">What went through your mind?</label>
+          <span class="hint">The automatic thought — write it exactly as it occurred to you.</span>
+          <textarea id="cbt-thought" placeholder="e.g. They're ignoring me on purpose. I've upset them."></textarea>
+        </div>
+      </div>
+
+      <div class="cbt-step" data-step="2">
+        <div class="cbt-field">
+          <label for="cbt-for">What supports this thought?</label>
+          <span class="hint">Real evidence only — not feelings, not assumptions.</span>
+          <textarea id="cbt-for" placeholder="e.g. They usually reply quickly."></textarea>
+        </div>
+      </div>
+
+      <div class="cbt-step" data-step="3">
+        <div class="cbt-field">
+          <label for="cbt-against">What doesn't fit this thought?</label>
+          <span class="hint">Other explanations, past experience, anything you might be leaving out.</span>
+          <textarea id="cbt-against" placeholder="e.g. They mentioned a big week at work. They've been slow to reply before for unrelated reasons."></textarea>
+        </div>
+      </div>
+
+      <div class="cbt-step" data-step="4">
+        <div class="cbt-field">
+          <label for="cbt-balanced">Given all of that — what's a more balanced thought?</label>
+          <span class="hint">Not forced positivity, just something that fits the evidence better.</span>
+          <textarea id="cbt-balanced" placeholder="e.g. There are a few likely reasons for the delay, and most have nothing to do with me."></textarea>
+        </div>
+      </div>
+
+      <div class="cbt-nav">
+        <button type="button" class="btn btn-ghost" id="cbt-back">Back</button>
+        <button type="button" class="btn btn-primary" id="cbt-next">Next</button>
+      </div>
+    </form>
+
+    <div class="cc-card cbt-summary" id="cbt-summary">
+      <h3 style="margin-bottom: var(--space-md);">Here's the thought, side by side</h3>
+      <div class="cbt-summary-row">
+        <strong>Situation</strong>
+        <span id="summary-situation"></span>
+      </div>
+      <div class="cbt-summary-row">
+        <strong>Automatic thought</strong>
+        <span id="summary-thought"></span>
+      </div>
+      <div class="cbt-summary-row">
+        <strong>Evidence for</strong>
+        <span id="summary-for"></span>
+      </div>
+      <div class="cbt-summary-row">
+        <strong>Evidence against</strong>
+        <span id="summary-against"></span>
+      </div>
+      <div class="cbt-summary-row" style="border-bottom: none;">
+        <strong>Balanced thought</strong>
+        <span id="summary-balanced"></span>
+      </div>
+      <button type="button" class="btn btn-ghost" id="cbt-restart">Start a new one</button>
+    </div>
+
+    <p style="font-size: 0.82rem; color: var(--sage); text-align: center; margin-top: var(--space-md);">
+      This isn't saved anywhere — it resets if you leave the page. If this kind of thinking pattern feels constant rather than occasional, a psychologist trained in CBT can go much further with this than a web page can.
+    </p>
+  </div>
+</section>
+
+<div class="act-break">
+  <div class="container act-break__inner">
+    <span class="act-break__line"></span>
+    <span class="act-break__label">Or, a quieter way in</span>
+    <span class="act-break__line"></span>
+  </div>
+</div>
+
+<section class="section section--tinted">
+  <div class="container">
+    <h3 class="reading-subheading">Short stories</h3>
+    <div class="reading-grid">
+      <div class="cc-card reading-card" data-modal="story1" tabindex="0" role="button">
+        <h4>The Power of Persistence</h4>
+        <p>A boy who never gave up...</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="story2" tabindex="0" role="button">
+        <h4>The Mountain Within</h4>
+        <p>Climbing the toughest climb yet...</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="story3" tabindex="0" role="button">
+        <h4>Silent Strength</h4>
+        <p>Her calmness shook the world...</p>
+      </div>
+    </div>
+
+    <h3 class="reading-subheading">Motivational articles</h3>
+    <div class="reading-grid">
+      <div class="cc-card reading-card" data-modal="article1" tabindex="0" role="button">
+        <h4>Overcoming Self-Doubt</h4>
+        <p>Train your mind to believe again...</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="article2" tabindex="0" role="button">
+        <h4>Habits of Inner Peace</h4>
+        <p>Daily rituals that reset your headspace...</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="article3" tabindex="0" role="button">
+        <h4>Unlocking Mind Power</h4>
+        <p>Discover strength hidden in thought...</p>
+      </div>
+    </div>
+
+    <h3 class="reading-subheading">Inspirational quotes</h3>
+    <div class="reading-grid">
+      <div class="cc-card reading-card" data-modal="quote1" tabindex="0" role="button">
+        <h4>"Stars can't shine without darkness."</h4>
+        <p>Let your light rise through struggles.</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="quote2" tabindex="0" role="button">
+        <h4>"Breathe. It's a bad day, not a bad life."</h4>
+        <p>Take a pause, not a defeat.</p>
+      </div>
+      <div class="cc-card reading-card" data-modal="quote3" tabindex="0" role="button">
+        <h4>"The comeback is always stronger."</h4>
+        <p>Because you're not done yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="story1" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="story1" aria-label="Close">&times;</button>
+    <h3>The Power of Persistence</h3>
+    <p>Once there was a boy who failed multiple times but never gave up. His persistence led him to greatness. This story reminds us that failure is not the opposite of success but part of it.</p>
+  </div>
+</div>
+
+<div id="story2" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="story2" aria-label="Close">&times;</button>
+    <h3>The Mountain Within</h3>
+    <p>He stood at the base of the impossible. With each step, he climbed not just a peak but the fear within himself — a tale of courage, resilience, and self-discovery.</p>
+  </div>
+</div>
+
+<div id="story3" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="story3" aria-label="Close">&times;</button>
+    <h3>Silent Strength</h3>
+    <p>She never raised her voice, yet the room listened. Her calm in the face of chaos became the thing everyone remembered — proof that strength doesn't always shout.</p>
+  </div>
+</div>
+
+<div id="article1" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="article1" aria-label="Close">&times;</button>
+    <h3>Overcoming Self-Doubt</h3>
+    <p>Self-doubt often speaks louder than evidence. Training your mind means noticing the thought without obeying it — building a small, repeated practice of trusting yourself again.</p>
+  </div>
+</div>
+
+<div id="article2" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="article2" aria-label="Close">&times;</button>
+    <h3>Habits of Inner Peace</h3>
+    <p>Inner peace rarely arrives all at once. It tends to come from small daily rituals — a quiet morning, a walk, a moment of stillness before the day takes over.</p>
+  </div>
+</div>
+
+<div id="article3" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="article3" aria-label="Close">&times;</button>
+    <h3>Unlocking Mind Power</h3>
+    <p>The mind holds more capacity for calm and focus than most of us draw on day to day. The first step is simply noticing where your attention goes, and gently redirecting it.</p>
+  </div>
+</div>
+
+<div id="quote1" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="quote1" aria-label="Close">&times;</button>
+    <h3>"Stars can't shine without darkness."</h3>
+    <p>Darkness is not the end — it's the contrast your light needs to shine brighter. Embrace your shadows, for they help reveal your brilliance.</p>
+  </div>
+</div>
+
+<div id="quote2" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="quote2" aria-label="Close">&times;</button>
+    <h3>"Breathe. It's a bad day, not a bad life."</h3>
+    <p>A hard day doesn't define the whole story. Give yourself permission to pause, breathe, and start again tomorrow.</p>
+  </div>
+</div>
+
+<div id="quote3" class="reading-modal">
+  <div class="modal-content">
+    <button class="close-btn" data-close="quote3" aria-label="Close">&times;</button>
+    <h3>"The comeback is always stronger."</h3>
+    <p>Setbacks aren't the end of the story — they're often the chapter right before the strongest part of it.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <span class="eyebrow">Recommended</span>
+    <h2 style="margin-bottom: var(--space-md);">Books worth your time</h2>
+    <div class="reading-grid">
+      <div class="cc-card recommended-card">
+        <img src="https://m.media-amazon.com/images/I/81TwewImvVL._SL1500_.jpg" alt="Stop Overthinking book cover" class="book-cover">
+        <h4>Stop Overthinking</h4>
+        <p>A practical guide to easing an overactive mind and finding calmer thinking patterns.</p>
+        <a href="https://www.amazon.com.au/s?k=Stop+Overthinking+Nick+Trenton" target="_blank" rel="noopener" class="btn btn-ghost">Find it</a>
+      </div>
+      <div class="cc-card recommended-card">
+        <img src="https://m.media-amazon.com/images/I/710cYy40DUL._SL1500_.jpg" alt="The Courage to Be Disliked book cover" class="book-cover">
+        <h4>The Courage to Be Disliked</h4>
+        <p>A philosophical guide to freeing yourself from others' expectations and finding self-acceptance.</p>
+        <a href="https://www.amazon.com.au/s?k=Courage+to+be+Disliked" target="_blank" rel="noopener" class="btn btn-ghost">Find it</a>
+      </div>
+      <div class="cc-card recommended-card">
+        <img src="https://m.media-amazon.com/images/I/51EESQGC5iL._SY425_.jpg" alt="Ikigai book cover" class="book-cover">
+        <h4>Ikigai</h4>
+        <p>The Japanese idea of finding your reason for being — purpose through balance and mindfulness.</p>
+        <a href="https://www.amazon.com.au/s?k=Ikigai+Hector+Garcia" target="_blank" rel="noopener" class="btn btn-ghost">Find it</a>
+      </div>
+      <div class="cc-card recommended-card">
+        <img src="https://m.media-amazon.com/images/I/912g5f4ngPL._SY466_.jpg" alt="The Mindfulness Puzzle Book cover" class="book-cover">
+        <h4>The Mindfulness Puzzle Book</h4>
+        <p>Puzzles designed to enhance focus and reduce stress through gentle, interactive mindfulness.</p>
+        <a href="https://www.amazon.com.au/s?k=Mindfulness+Puzzle+Book" target="_blank" rel="noopener" class="btn btn-ghost">Find it</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+<script src="assets/reading.js"></script>
+<script src="assets/cbt-reframe.js"></script>
+</body>
+</html>

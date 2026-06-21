@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your history — CalmConnect</title>
+<meta name="description" content="A simple view of your check-ins over time, stored only in this browser.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/design-system.css">
+
+<style>
+  .history-hero {
+    padding: var(--space-lg) 0 var(--space-md);
+  }
+
+  .history-hero h1 {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+  }
+
+  .history-hero p {
+    max-width: 600px;
+    color: var(--mid-eucalyptus);
+    margin-top: var(--space-sm);
+  }
+
+  .privacy-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--sage);
+    margin-top: var(--space-sm);
+    padding: 0.4rem 0.75rem;
+    background: var(--sage-tint);
+    border-radius: var(--radius-sm);
+  }
+
+  .chart-card {
+    margin-top: var(--space-lg);
+  }
+
+  .chart-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .chart-caption {
+    color: var(--mid-eucalyptus);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .chart-svg-wrap {
+    overflow-x: auto;
+  }
+
+  .chart-svg-wrap svg {
+    display: block;
+    min-width: 480px;
+  }
+
+  .chart-line {
+    fill: none;
+    stroke: var(--mid-eucalyptus);
+    stroke-width: 2;
+  }
+
+  .chart-point {
+    fill: var(--mid-eucalyptus);
+  }
+
+  .chart-point.is-elevated {
+    fill: var(--terracotta);
+  }
+
+  .chart-axis {
+    stroke: var(--sage);
+    stroke-width: 1;
+  }
+
+  .chart-axis-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--sage);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-xl) var(--space-md);
+    color: var(--mid-eucalyptus);
+  }
+
+  .empty-state .btn {
+    margin-top: var(--space-md);
+  }
+
+  .entry-list {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .entry-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--sage-tint);
+  }
+
+  .entry-row__date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--sage);
+  }
+
+  .entry-row__rec {
+    font-size: 0.92rem;
+  }
+</style>
+</head>
+<body data-page="history">
+
+<div id="cc-nav-root"></div>
+<div id="cc-crisis-root"></div>
+
+<header class="history-hero">
+  <div class="container">
+    <span class="eyebrow">Your history</span>
+    <h1>How things have been trending</h1>
+    <p>
+      A simple view of your check-ins, stored only in this browser. The line below tracks one
+      specific signal — how closely each message you've shared resembled high-risk language,
+      according to the model — not a general "mood score." It's here to show patterns, not to
+      replace paying attention to how you actually feel.
+    </p>
+    <span class="privacy-note">No account. No email. Clearing your browser data clears this too.</span>
+  </div>
+</header>
+
+<section class="section" id="history-content">
+  <div class="container">
+
+    <div id="loading-state" class="empty-state">
+      <p>Loading your history…</p>
+    </div>
+
+    <div id="empty-state" class="empty-state" style="display: none;">
+      <h2 style="font-size: 1.4rem; margin-bottom: var(--space-sm);">Nothing here yet</h2>
+      <p>Once you check in from the home page, your check-ins will start showing up here.</p>
+      <a href="index.html" class="btn btn-primary">Check in now</a>
+    </div>
+
+    <div id="data-state" style="display: none;">
+      <div class="cc-card chart-card">
+        <h2>Escalation-trigger signal over time</h2>
+        <p class="chart-caption" id="chart-caption"></p>
+        <div class="chart-svg-wrap">
+          <svg id="trend-svg" viewBox="0 0 640 220" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Line chart of escalation probability over time"></svg>
+        </div>
+      </div>
+
+      <div class="entry-list" id="entry-list"></div>
+    </div>
+
+  </div>
+</section>
+
+<div id="cc-footer-root"></div>
+
+<script src="assets/shared.js"></script>
+<script src="assets/session.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/history.js"></script>
+</body>
+</html>
