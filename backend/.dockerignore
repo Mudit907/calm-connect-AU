@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.git/
+.gitignore
+mlruns/
+mlflow.db
+data/eval_set.csv
+data/interaction_log.csv
+.venv/
+*.md
