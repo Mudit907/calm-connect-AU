@@ -1,0 +1,5 @@
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/category_classifier.joblib
+!artifacts/escalation_trigger.joblib
+mlflow.db
