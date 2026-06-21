@@ -8,7 +8,7 @@ escalation trigger, then combined with AU-context-aware logic to surface
 the most relevant of five self-help therapy modules — with a documented,
 literature-grounded design for when self-help isn't enough.
 
-**Live demo:** _add your deployed frontend + API URLs here once hosted_
+**Live demo:** [calmconnect-au](https://mudit907.github.io/calm-connect-AU/) (frontend) · [API docs](https://calm-connect-au.onrender.com/docs) (backend, FastAPI auto-generated)
 
 ## Why this exists, and what changed
 
