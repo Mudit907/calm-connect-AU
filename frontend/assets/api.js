@@ -6,7 +6,7 @@
  * Depends on session.js being loaded first (for getOrCreateSessionId).
  */
 
-const API_BASE_URL = "https://calmconnect-api.onrender.com"; // TODO: replace with your deployed URL
+const API_BASE_URL = "https://calm-connect-au.onrender.com";
 
 async function getRecommendation(age, text) {
   const sessionId = getOrCreateSessionId();
